@@ -1,20 +1,49 @@
+# 🚖 CabShare
+
+A modern full-stack **Cab Sharing Platform** that enables passengers to find rides, drivers to manage trips, and administrators to monitor the entire system through a secure and user-friendly interface.
+
+---
+
+## ✨ Features
+
+- 🔐 Secure User Authentication
+- 👥 Role-Based Access (Passenger, Driver & Admin)
+- 🚖 Ride Search & Booking
+- 📍 Live Ride Tracking
+- 💳 Wallet & Payment Management
+- 🚗 Driver Dashboard
+- 📊 Admin Dashboard
+- 📅 Booking & Ride History
+- ⭐ Ratings & Reviews
+- 🔔 Real-Time Notifications
+- 📈 Reports & Analytics
+- 📱 Responsive User Interface
+- ⚡ RESTful API Integration
+- 🔒 JWT Authentication
+- 🐳 Docker Support
+
+---
+
+## 📂 Project Structure
+
+```text
 CabShare/
 │
 ├── client/                         # React Frontend
 │   └── src/
-│       ├── assets/                 # Images, icons, fonts
-│       ├── components/             # Reusable UI components
-│       │   ├── ui/                 # Button, Input, Modal, Card
-│       │   ├── cards/              # Dashboard cards
-│       │   ├── forms/              # Login, Register, Ride forms
-│       │   ├── tables/             # Data tables
-│       │   ├── charts/             # Analytics charts
-│       │   ├── navbar/             # Top navigation
-│       │   ├── sidebar/            # Sidebar navigation
-│       │   ├── footer/             # Footer
-│       │   └── common/             # Loader, Pagination, Skeleton
+│       ├── assets/
+│       ├── components/
+│       │   ├── ui/
+│       │   ├── cards/
+│       │   ├── forms/
+│       │   ├── tables/
+│       │   ├── charts/
+│       │   ├── navbar/
+│       │   ├── sidebar/
+│       │   ├── footer/
+│       │   └── common/
 │       │
-│       ├── pages/                  # Application pages
+│       ├── pages/
 │       │   ├── Landing/
 │       │   ├── Login/
 │       │   ├── Register/
@@ -28,45 +57,46 @@ CabShare/
 │       │   ├── Settings/
 │       │   └── Reports/
 │       │
-│       ├── layouts/                # Main, Dashboard & Auth layouts
-│       ├── hooks/                  # Custom React Hooks
-│       ├── redux/                  # Redux Store & Slices
-│       ├── services/               # API Services
-│       ├── routes/                 # React Router
-│       ├── context/                # React Context
-│       ├── constants/              # Constant values
-│       ├── utils/                  # Helper functions
-│       ├── types/                  # TypeScript Interfaces
-│       ├── styles/                 # Global CSS
+│       ├── layouts/
+│       ├── hooks/
+│       ├── redux/
+│       ├── services/
+│       ├── routes/
+│       ├── context/
+│       ├── constants/
+│       ├── utils/
+│       ├── types/
+│       ├── styles/
 │       ├── App.tsx
 │       └── main.tsx
 │
 ├── server/                         # Node.js Backend
 │   └── src/
-│       ├── config/                 # Database, JWT, Cloudinary Config
-│       ├── controllers/            # Business Logic
-│       ├── middleware/             # Authentication & Error Handling
-│       ├── models/                 # MongoDB Models
-│       ├── routes/                 # API Routes
-│       ├── services/               # Email, Payment, Notification Services
-│       ├── socket/                 # Socket.IO
-│       ├── validators/             # Request Validation
-│       ├── database/               # MongoDB Connection
-│       ├── utils/                  # Backend Helpers
-│       ├── uploads/                # Uploaded Files
-│       ├── app.ts                  # Express App
-│       └── server.ts               # Server Entry Point
+│       ├── config/
+│       ├── controllers/
+│       ├── middleware/
+│       ├── models/
+│       ├── routes/
+│       ├── services/
+│       ├── socket/
+│       ├── validators/
+│       ├── database/
+│       ├── utils/
+│       ├── uploads/
+│       ├── app.ts
+│       └── server.ts
 │
-├── docs/                           # Project Documentation
+├── docs/
 │   ├── API.md
 │   ├── Architecture.md
 │   ├── DatabaseSchema.md
 │   ├── Deployment.md
 │   └── PostmanCollection.json
 │
-├── README.md                       # Project Guide
-├── docker-compose.yml              # Docker Configuration
-├── .env.example                    # Environment Variables Template
-├── .gitignore                      # Git Ignore Rules
-├── package.json                    # Root Package
-└── LICENSE                         # Project License
+├── README.md
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+├── package.json
+└── LICENSE
+```
