@@ -31,13 +31,13 @@ import CreateRidePage from '@/pages/CreateRidePage';
 import DriverBookingsPage from '@/pages/DriverBookingsPage';
 import VehiclesPage from '@/pages/VehiclesPage';
 
-import AdminUsersPage from '@/pages/admin/AdminUsersPage';
-import AdminDriversPage from '@/pages/admin/AdminDriversPage';
-import AdminRidesPage from '@/pages/admin/AdminRidesPage';
-import AdminAnalyticsPage from '@/pages/admin/AdminAnalyticsPage';
-import AdminPromoCodesPage from '@/pages/admin/AdminPromoCodesPage';
-import AdminSupportPage from '@/pages/admin/AdminSupportPage';
-import AdminSettingsPage from '@/pages/admin/AdminSettingsPage';
+import AdminUsersPage from '@/pages/Admin/AdminUsersPage';
+import AdminDriversPage from '@/pages/Admin/AdminDriversPage';
+import AdminRidesPage from '@/pages/Admin/AdminRidesPage';
+import AdminAnalyticsPage from '@/pages/Admin/AdminAnalyticsPage';
+import AdminPromoCodesPage from '@/pages/Admin/AdminPromoCodesPage';
+import AdminSupportPage from '@/pages/Admin/AdminSupportPage';
+import AdminSettingsPage from '@/pages/Admin/AdminSettingsPage';
 
 import NotFoundPage from '@/pages/NotFoundPage';
 

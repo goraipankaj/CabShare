@@ -10,7 +10,7 @@ import { logout as logoutAction } from '@/redux/slices/authSlice';
 import { useLogoutMutation } from '@/redux/api/authApi';
 import toast from 'react-hot-toast';
 
-const PASSENGER_LINKS = [
+export const PASSENGER_LINKS = [
   { to: '/dashboard', label: 'Dashboard', icon: HiOutlineViewGrid, end: true },
   { to: '/rides/search', label: 'Search Rides', icon: HiOutlineSearch },
   { to: '/bookings', label: 'My Bookings', icon: HiOutlineClipboardList },
@@ -20,7 +20,7 @@ const PASSENGER_LINKS = [
   { to: '/profile', label: 'Profile', icon: HiOutlineCog },
 ];
 
-const DRIVER_LINKS = [
+export const DRIVER_LINKS = [
   { to: '/dashboard', label: 'Dashboard', icon: HiOutlineViewGrid, end: true },
   { to: '/driver/rides', label: 'My Rides', icon: FaCarSide },
   { to: '/driver/bookings', label: 'Bookings', icon: HiOutlineClipboardList },
@@ -31,7 +31,7 @@ const DRIVER_LINKS = [
   { to: '/profile', label: 'Profile', icon: HiOutlineCog },
 ];
 
-const ADMIN_LINKS = [
+export const ADMIN_LINKS = [
   { to: '/dashboard', label: 'Dashboard', icon: HiOutlineViewGrid, end: true },
   { to: '/admin/users', label: 'Users', icon: HiOutlineUserGroup },
   { to: '/admin/drivers', label: 'Drivers', icon: HiOutlineTruck },

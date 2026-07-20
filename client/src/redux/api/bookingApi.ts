@@ -15,6 +15,21 @@ export const bookingApi = baseApi.injectEndpoints({
       query: (body) => ({ url: '/bookings', method: 'POST', body }),
       invalidatesTags: ['Booking', 'Ride'],
     }),
+    createMockBooking: builder.mutation<
+      ApiResponse<{ booking: Booking }>,
+      {
+        type: string;
+        driverName: string;
+        fare: number;
+        rating: number;
+        sourceCity: string;
+        destCity: string;
+        date: string;
+      }
+    >({
+      query: (body) => ({ url: '/bookings/mock', method: 'POST', body }),
+      invalidatesTags: ['Booking', 'Wallet'],
+    }),
     getMyBookings: builder.query<ApiResponse<{ bookings: Booking[]; pagination: PaginationMeta }>, Record<string, any> | void>({
       query: (params) => ({ url: '/bookings/me', params: params || {} }),
       providesTags: ['Booking'],
@@ -47,6 +62,7 @@ export const bookingApi = baseApi.injectEndpoints({
 
 export const {
   useCreateBookingMutation,
+  useCreateMockBookingMutation,
   useGetMyBookingsQuery,
   useGetDriverBookingsQuery,
   useGetBookingByIdQuery,

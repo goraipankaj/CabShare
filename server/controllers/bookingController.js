@@ -5,7 +5,10 @@ const Ride = require('../models/Ride');
 const Notification = require('../models/Notification');
 const ApiFeatures = require('../utils/ApiFeatures');
 const { generateOtp } = require('../utils/tokens');
-const { creditWallet, debitWallet } = require('../services/walletService');
+const { getOrCreateWallet, creditWallet, debitWallet } = require('../services/walletService');
+const User = require('../models/User');
+const Vehicle = require('../models/Vehicle');
+const Payment = require('../models/Payment');
 
 const notify = async (userId, title, message, type, reference, referenceModel) => {
   await Notification.create({ user: userId, title, message, type, reference, referenceModel });
@@ -202,6 +205,129 @@ const shareTrip = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: `Trip details shared with ${name}`, data: { tripSharedWith: booking.tripSharedWith } });
 });
 
+// @route POST /api/bookings/mock (passenger)
+const createMockBooking = asyncHandler(async (req, res) => {
+  const { type, driverName, fare, rating, sourceCity, destCity, date } = req.body;
+
+  if (!type || !driverName || !fare || !sourceCity || !destCity || !date) {
+    throw new ApiError(400, 'All details (type, driverName, fare, sourceCity, destCity, date) are required');
+  }
+
+  // 1. Verify passenger's wallet balance
+  const wallet = await getOrCreateWallet(req.user._id);
+  if (wallet.balance < fare) {
+    throw new ApiError(400, `Insufficient wallet balance. You have ₹${wallet.balance}, but the ride fare is ₹${fare}.`);
+  }
+
+  // 2. Resolve mock driver
+  let driver = await User.findOne({ role: 'driver' });
+  if (!driver) {
+    // If no driver user exists in DB, create a temporary driver placeholder
+    driver = await User.create({
+      name: driverName,
+      email: `driver_${Math.random().toString(36).substring(7)}@cabshare.app`,
+      phone: `+9196${Math.floor(10000000 + Math.random() * 90000000)}`,
+      password: 'Driver@123',
+      role: 'driver',
+      gender: 'male',
+      isEmailVerified: true,
+      isPhoneVerified: true,
+      ratingAverage: rating,
+      ratingCount: 10,
+    });
+    // Create the driver profile
+    const DriverProfile = require('../models/Driver');
+    await DriverProfile.create({
+      user: driver._id,
+      licenseNumber: `DL${Math.floor(10 + Math.random() * 90)} ${Math.floor(100000000000 + Math.random() * 900000000000)}`,
+      licenseExpiry: new Date(Date.now() + 5 * 365 * 24 * 60 * 60 * 1000), // 5 years from now
+      verificationStatus: 'approved',
+    });
+  }
+
+  // 3. Resolve mock vehicle
+  let vehicle = await Vehicle.findOne({ driver: driver._id });
+  if (!vehicle) {
+    const vType = type.toLowerCase() === 'bike' ? 'bike' : type.toLowerCase() === 'suv' ? 'suv' : type.toLowerCase() === 'auto' ? 'auto' : 'sedan';
+    vehicle = await Vehicle.create({
+      driver: driver._id,
+      type: vType,
+      brand: vType === 'bike' ? 'Honda' : vType === 'auto' ? 'Bajaj' : 'Toyota',
+      model: vType === 'bike' ? 'Activa' : vType === 'auto' ? 'RE' : 'Fortuner',
+      color: 'White',
+      registrationNumber: `DL${Math.floor(1 + Math.random() * 9)}C${String.fromCharCode(65 + Math.floor(Math.random() * 26))}${Math.floor(1000 + Math.random() * 9000)}`,
+      seatingCapacity: vType === 'bike' ? 1 : vType === 'auto' ? 3 : vType === 'suv' ? 6 : 4,
+      verificationStatus: 'approved',
+    });
+  }
+
+  // 4. Create the mock Ride
+  const ride = await Ride.create({
+    driver: driver._id,
+    vehicle: vehicle._id,
+    source: { address: sourceCity, lat: 28.7041, lng: 77.1025 },
+    destination: { address: destCity, lat: 26.9124, lng: 75.7873 },
+    departureDate: new Date(date),
+    departureTime: '14:30',
+    totalSeats: 4,
+    availableSeats: 3,
+    pricePerSeat: fare,
+    status: 'scheduled',
+  });
+
+  // 5. Debit fare from passenger's wallet
+  const { transaction } = await debitWallet({
+    userId: req.user._id,
+    amount: fare,
+    category: 'ride_fare',
+    reference: ride._id,
+    referenceModel: 'Ride',
+    description: `Fare payment for ride booking with driver ${driverName} (${type})`,
+  });
+
+  // 6. Create the Booking document
+  const booking = await Booking.create({
+    ride: ride._id,
+    passenger: req.user._id,
+    driver: driver._id,
+    seatsBooked: 1,
+    totalFare: fare,
+    pickupPoint: { address: sourceCity, lat: 28.7041, lng: 77.1025 },
+    dropPoint: { address: destCity, lat: 26.9124, lng: 75.7873 },
+    status: 'confirmed',
+    paymentStatus: 'paid',
+    paymentMethod: 'wallet',
+    otpForPickup: generateOtp(),
+  });
+
+  // 7. Update transaction reference to point to booking
+  transaction.reference = booking._id;
+  transaction.referenceModel = 'Booking';
+  await transaction.save();
+
+  // 8. Create Payment record
+  await Payment.create({
+    user: req.user._id,
+    booking: booking._id,
+    amount: fare,
+    method: 'wallet',
+    status: 'captured',
+    transaction: transaction._id,
+  });
+
+  // 9. Notifications
+  await Notification.create({
+    user: req.user._id,
+    title: 'Ride booked successfully',
+    message: `Your booking for ${type} with driver ${driverName} is confirmed. ₹${fare} paid from wallet.`,
+    type: 'ride_booked',
+    reference: booking._id,
+    referenceModel: 'Booking',
+  });
+
+  res.status(201).json({ success: true, message: 'Ride booked successfully', data: { booking } });
+});
+
 module.exports = {
   createBooking,
   acceptBooking,
@@ -211,4 +337,5 @@ module.exports = {
   getDriverBookings,
   getBookingById,
   shareTrip,
+  createMockBooking,
 };

@@ -8,6 +8,7 @@ const {
   getDriverBookings,
   getBookingById,
   shareTrip,
+  createMockBooking,
 } = require('../controllers/bookingController');
 const { createBookingValidator } = require('../validators/bookingValidator');
 const validate = require('../middlewares/validate');
@@ -18,6 +19,7 @@ const router = express.Router();
 router.use(protect);
 
 router.post('/', authorize('passenger'), createBookingValidator, validate, createBooking);
+router.post('/mock', authorize('passenger'), createMockBooking);
 router.get('/me', authorize('passenger'), getMyBookings);
 router.get('/driver/me', authorize('driver'), getDriverBookings);
 

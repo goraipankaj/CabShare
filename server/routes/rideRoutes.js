@@ -19,13 +19,13 @@ const { protect, authorize } = require('../middlewares/auth');
 const router = express.Router();
 
 router.get('/search', searchRides); // public - browsing does not require login
-router.get('/:id', getRideById);
 
 router.use(protect);
 
 router.post('/', authorize('driver'), createRideValidator, validate, createRide);
 router.get('/driver/me', authorize('driver'), getMyRides);
 router.get('/admin/all', authorize('admin'), getAllRidesAdmin);
+router.get('/:id', getRideById);
 router.patch('/:id', authorize('driver'), updateRide);
 router.delete('/:id', authorize('driver'), deleteRide);
 router.patch('/:id/cancel', authorize('driver'), cancelRide);

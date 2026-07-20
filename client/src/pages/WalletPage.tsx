@@ -15,12 +15,32 @@ const WalletPage = () => {
   const { data: txData, isLoading: txLoading } = useGetMyTransactionsQuery();
   const [createTopupOrder] = useCreateTopupOrderMutation();
   const [verifyTopup] = useVerifyTopupMutation();
-  const [amount, setAmount] = useState(500);
+  const [amount, setAmount] = useState(0);
 
   const handleTopup = async () => {
     try {
       const res = await createTopupOrder({ amount }).unwrap();
-      const { order, keyId } = res.data;
+      const { order, keyId, isMock } = res.data;
+
+      if (isMock) {
+        const toastId = toast.loading('Simulating payment sandbox...');
+        setTimeout(async () => {
+          try {
+            await verifyTopup({
+              razorpayOrderId: order.id,
+              razorpayPaymentId: `mock_pay_${Math.random().toString(36).substring(7)}`,
+              razorpaySignature: 'mock_signature',
+              amount,
+            }).unwrap();
+            toast.dismiss(toastId);
+            toast.success('Wallet topped up successfully (Sandbox)!');
+          } catch {
+            toast.dismiss(toastId);
+            toast.error('Payment verification failed');
+          }
+        }, 1500);
+        return;
+      }
 
       if (typeof window.Razorpay === 'undefined') {
         toast.error('Razorpay checkout script not loaded. Add the script tag from the README to index.html.');

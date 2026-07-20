@@ -32,6 +32,10 @@
     @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-colors focus:border-primary-400 focus:ring-2 focus:ring-primary-100 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500;
   }
 
+  .input-field option {
+    @apply bg-white text-slate-800 dark:bg-[#16122c] dark:text-white;
+  }
+
   .skeleton {
     @apply animate-pulse rounded-xl bg-slate-200/70 dark:bg-white/10;
   }

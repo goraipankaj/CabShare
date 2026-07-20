@@ -11,7 +11,7 @@ export const walletApi = baseApi.injectEndpoints({
       query: (params) => ({ url: '/wallet/transactions', params: params || {} }),
       providesTags: ['Wallet'],
     }),
-    createTopupOrder: builder.mutation<ApiResponse<{ order: any; keyId: string }>, { amount: number }>({
+    createTopupOrder: builder.mutation<ApiResponse<{ order: any; keyId: string; isMock?: boolean }>, { amount: number }>({
       query: (body) => ({ url: '/payments/wallet/topup/create-order', method: 'POST', body }),
     }),
     verifyTopup: builder.mutation<ApiResponse<{ wallet: Wallet }>, any>({
