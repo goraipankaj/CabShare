@@ -1,0 +1,104 @@
+{
+  "info": {
+    "name": "CabShare API",
+    "description": "Core auth, ride, and booking flows for the CabShare API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "accessToken", "value": "" },
+    { "key": "rideId", "value": "" },
+    { "key": "bookingId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Passenger\",\n  \"email\": \"test@example.com\",\n  \"phone\": \"+919812345678\",\n  \"password\": \"Passw0rd!\",\n  \"role\": \"passenger\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Passw0rd!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Rides",
+      "item": [
+        {
+          "name": "Search Rides",
+          "request": { "method": "GET", "url": "{{baseUrl}}/rides/search" }
+        },
+        {
+          "name": "Create Ride (driver)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{baseUrl}}/rides",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle\": \"<vehicleId>\",\n  \"source\": { \"address\": \"Connaught Place, Delhi\", \"lat\": 28.6315, \"lng\": 77.2167 },\n  \"destination\": { \"address\": \"Cyber City, Gurugram\", \"lat\": 28.4949, \"lng\": 77.0891 },\n  \"departureDate\": \"2026-08-01\",\n  \"departureTime\": \"09:00\",\n  \"totalSeats\": 3,\n  \"pricePerSeat\": 150\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking (passenger)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": "{{baseUrl}}/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ride\": \"{{rideId}}\",\n  \"seatsBooked\": 1,\n  \"paymentMethod\": \"cash\"\n}"
+            }
+          }
+        },
+        {
+          "name": "My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": "{{baseUrl}}/bookings/me"
+          }
+        }
+      ]
+    }
+  ]
+}
